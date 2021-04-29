@@ -1,0 +1,60 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "a9e39c1b8eb093c8440aa73564a38ffb",
+    "packages": [
+        {
+            "name": "pierreminiggio/github-user-agent",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pierreminiggio/php-github-user-agent.git",
+                "reference": "b0ad2ec98d8c9e3962fa875da79f3ede88ea8cab"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pierreminiggio/php-github-user-agent/zipball/b0ad2ec98d8c9e3962fa875da79f3ede88ea8cab",
+                "reference": "b0ad2ec98d8c9e3962fa875da79f3ede88ea8cab",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PierreMiniggio\\GithubUserAgent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Pierre MINIGGIO",
+                    "email": "pierre@miniggiodev.fr"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/pierreminiggio/php-github-user-agent/issues",
+                "source": "https://github.com/pierreminiggio/php-github-user-agent/tree/1.0.0"
+            },
+            "time": "2021-04-28T19:47:42+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "pierreminiggio/github-user-agent": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.4.0"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
+}
