@@ -26,44 +26,6 @@ class GithubActionArtifactDownloader
         int $artifactId
     ): array
     {
-        $curl = curl_init("https://api.github.com/repos/$owner/$repo/actions/artifacts/$artifactId/zip");
-        curl_setopt_array($curl, [
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_USERAGENT => GithubUserAgent::USER_AGENT,
-            CURLOPT_HTTPHEADER => ['Authorization: token ' . $token]
-        ]);
-
-        $response = curl_exec($curl);
-
-        if ($response === false) {
-            curl_close($curl);
-            throw new RuntimeException('Curl error' . curl_error($curl));
-        }
-
-        $jsonResponse = json_decode($response, true);
-
-        if (is_array($jsonResponse) && ! empty($jsonResponse['message'])) {
-            $message = $jsonResponse['message'];
-
-            if (
-                $message === 'Must have admin rights to Repository.'
-                || $message === 'Bad credentials'
-            ) {
-                curl_close($curl);
-                throw new UnauthorizedException();
-            }
-
-            if ($message === 'Not Found') {
-                curl_close($curl);
-                throw new NotFoundException();
-            }
-
-            curl_close($curl);
-            throw new UnknownException($message);
-        }
-
-        curl_close($curl);
 
         $cacheDir =
             __DIR__
@@ -86,9 +48,46 @@ class GithubActionArtifactDownloader
             unlink($zipFileName);
         }
 
-        $file = fopen($zipFileName, 'w+');
-        fputs($file, $response);
-        fclose($file);
+        if (! $openedFile = fopen($zipFileName, 'wb+')) {
+            throw new RuntimeException('File opening error');
+        }
+
+        $curl = curl_init("https://api.github.com/repos/$owner/$repo/actions/artifacts/$artifactId/zip");
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_USERAGENT => GithubUserAgent::USER_AGENT,
+            CURLOPT_HTTPHEADER => ['Authorization: token ' . $token],
+            CURLOPT_FILE => $openedFile
+        ]);
+
+        curl_exec($curl);
+        curl_close($curl);
+        fclose($openedFile);
+
+        // if ($response === false) {
+        //     throw new RuntimeException('Curl error' . curl_error($curl));
+        // }
+
+        // $jsonResponse = json_decode($response, true);
+
+        // if (is_array($jsonResponse) && ! empty($jsonResponse['message'])) {
+        //     $message = $jsonResponse['message'];
+
+        //     if (
+        //         $message === 'Must have admin rights to Repository.'
+        //         || $message === 'Bad credentials'
+        //     ) {
+        //         throw new UnauthorizedException();
+        //     }
+
+        //     if ($message === 'Not Found') {
+        //         throw new NotFoundException();
+        //     }
+
+        //     throw new UnknownException($message);
+        // }
+
 
         $zip = new ZipArchive();
 
@@ -102,17 +101,11 @@ class GithubActionArtifactDownloader
             $zippedFileName = $zip->getNameIndex($zippedFileIndex);
             $extractedName = $artifactName . '-' . $zippedFileName;
 
-            if ($zippedFileData = $zip->getFromIndex($zippedFileIndex)) {
-                $extractedFileName = $cacheDir . $extractedName;
-
-                if (file_exists($extractedFileName)) {
-                    unlink($extractedFileName);
-                }
-
-                if (file_put_contents($extractedFileName, $zippedFileData)) {
-                    $artifactFiles[] = $extractedFileName;
-                }
-            }
+            $zip->extractTo($cacheDir, $zippedFileName);
+            $extractedFileName = $cacheDir . $extractedName;
+            rename($cacheDir . $zippedFileName, $extractedFileName);
+            
+            $artifactFiles[] = $extractedFileName;
         }
 
         $zip->close();
