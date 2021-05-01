@@ -7,6 +7,7 @@ use PierreMiniggio\GithubActionArtifactDownloader\Exception\UnauthorizedExceptio
 use PierreMiniggio\GithubActionArtifactDownloader\Exception\UnknownException;
 use PierreMiniggio\GithubUserAgent\GithubUserAgent;
 use RuntimeException;
+use ValueError;
 use ZipArchive;
 
 class GithubActionArtifactDownloader
@@ -65,30 +66,6 @@ class GithubActionArtifactDownloader
         curl_close($curl);
         fclose($openedFile);
 
-        // if ($response === false) {
-        //     throw new RuntimeException('Curl error' . curl_error($curl));
-        // }
-
-        // $jsonResponse = json_decode($response, true);
-
-        // if (is_array($jsonResponse) && ! empty($jsonResponse['message'])) {
-        //     $message = $jsonResponse['message'];
-
-        //     if (
-        //         $message === 'Must have admin rights to Repository.'
-        //         || $message === 'Bad credentials'
-        //     ) {
-        //         throw new UnauthorizedException();
-        //     }
-
-        //     if ($message === 'Not Found') {
-        //         throw new NotFoundException();
-        //     }
-
-        //     throw new UnknownException($message);
-        // }
-
-
         $zip = new ZipArchive();
 
         if (! $zip->open($zipFileName)) {
@@ -108,7 +85,37 @@ class GithubActionArtifactDownloader
             $artifactFiles[] = $extractedFileName;
         }
 
-        $zip->close();
+        try {
+            $zip->close();
+        } catch(ValueError $e) {
+
+            if ($e->getMessage() === 'Invalid or uninitialized Zip object') {
+                $response = file_get_contents($zipFileName);
+                unlink($zipFileName);
+                $jsonResponse = json_decode($response, true);
+
+                if (is_array($jsonResponse) && ! empty($jsonResponse['message'])) {
+                    $message = $jsonResponse['message'];
+
+                    if (
+                        $message === 'Must have admin rights to Repository.'
+                        || $message === 'Bad credentials'
+                    ) {
+                        throw new UnauthorizedException();
+                    }
+
+                    if ($message === 'Not Found') {
+                        throw new NotFoundException();
+                    }
+
+                    throw new UnknownException($message);
+                }
+            }
+
+            unlink($zipFileName);
+            throw new RuntimeException('Unknown zip exepection : ' . $e->getMessage());
+        }
+        
         unlink($zipFileName);
 
         return $artifactFiles;
