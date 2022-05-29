@@ -8,18 +8,13 @@
             "email": "pierre@miniggiodev.fr"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=7.4.0",
-        "pierreminiggio/github-user-agent": "9999999-dev"
+        "pierreminiggio/github-user-agent": "^2.0"
     },
     "autoload": {
         "psr-4": {
             "PierreMiniggio\\GithubActionArtifactDownloader\\": "src/"
         }
-    },
-    "scripts": {},
-    "scripts-descriptions": {
-        "test": "Run all tests!"
     }
 }

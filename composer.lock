@@ -4,26 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9e39c1b8eb093c8440aa73564a38ffb",
+    "content-hash": "a5048ce0d2d0e7e5754b994235685118",
     "packages": [
         {
             "name": "pierreminiggio/github-user-agent",
-            "version": "dev-main",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pierreminiggio/php-github-user-agent.git",
-                "reference": "b0ad2ec98d8c9e3962fa875da79f3ede88ea8cab"
+                "reference": "29dafa6b033084180ff7ba7471698335e37c0cba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pierreminiggio/php-github-user-agent/zipball/b0ad2ec98d8c9e3962fa875da79f3ede88ea8cab",
-                "reference": "b0ad2ec98d8c9e3962fa875da79f3ede88ea8cab",
+                "url": "https://api.github.com/repos/pierreminiggio/php-github-user-agent/zipball/29dafa6b033084180ff7ba7471698335e37c0cba",
+                "reference": "29dafa6b033084180ff7ba7471698335e37c0cba",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -39,17 +38,15 @@
             ],
             "support": {
                 "issues": "https://github.com/pierreminiggio/php-github-user-agent/issues",
-                "source": "https://github.com/pierreminiggio/php-github-user-agent/tree/1.0.0"
+                "source": "https://github.com/pierreminiggio/php-github-user-agent/tree/2.0.0"
             },
-            "time": "2021-04-28T19:47:42+00:00"
+            "time": "2022-05-29T19:54:25+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "pierreminiggio/github-user-agent": 20
-    },
+    "minimum-stability": "stable",
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
